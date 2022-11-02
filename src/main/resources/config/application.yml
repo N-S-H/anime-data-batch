@@ -1,0 +1,90 @@
+management:
+  endpoints:
+    web:
+      base-path: /management
+      exposure:
+        include: ["configprops", "env", "metrics", "prometheus", "health", "info", "threaddump"]
+  info:
+    git:
+      mode: full
+  metrics:
+    enabled: true
+    export:
+      prometheus:
+        enabled: true
+    web:
+      server:
+        auto-time-requests: false
+    distribution:
+      percentiles:
+        all: 0.7, 0.95
+  prometheus:
+    enabled: true
+  server:
+    port: 8081
+
+spring:
+  application:
+    name: anime-data-batch-job
+  batch:
+    job:
+      enabled: false
+  thymeleaf:
+    mode: HTML
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: false
+  mail:
+    host: 172.26.202.27
+    port: 25
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+          socketFactory:
+            fallback: true
+
+---
+# prod profile placeholder
+spring:
+  profiles: prod
+
+credentialsPath: /etc/config/secrets
+
+JOB_NAME: animeDataLoad
+#JOB_NAME: animeStatsGenerator
+
+MAX_THREADS: 5
+
+SENDER_EMAIL_ADDRESS: anime-data-batch-prod@lowes.com
+JOB_RUN_EMAIL_ALERT_SUBSCRIBERS: sriharsha.namilakonda@gmail.com
+
+EMAIL_ALERTS_ON_INDC: true
+
+CHUNK_SIZE: 1000
+---
+# dev profile placeholder
+spring:
+  profiles: dev
+
+postgresql:
+  url: jdbc:postgresql://localhost:5432/postgres
+  schemaName: public
+
+credentialsPath: secrets_dev.json
+
+JOB_NAME: animeDataLoad
+#JOB_NAME: animeStatsGenerator
+
+MAX_THREADS: 5
+
+SENDER_EMAIL_ADDRESS: anime-data-batch-dev@lowes.com
+JOB_RUN_EMAIL_ALERT_SUBSCRIBERS: sriharsha.namilakonda@gmail.com
+
+EMAIL_ALERTS_ON_INDC: true
+
+CHUNK_SIZE: 1000
